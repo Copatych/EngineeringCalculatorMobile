@@ -7,7 +7,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnLayout
 import androidx.core.view.plusAssign
-import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.*
 
 
 class MainActivity : AppCompatActivity(), ViewInterface {
@@ -78,17 +78,28 @@ class MainActivity : AppCompatActivity(), ViewInterface {
         }
     }
 
-    private fun createDynamicKeyboard(viewGroup: ViewGroup, keyboard: List<String>) {
+    private fun createDynamicKeyboard(
+        viewGroup: ViewGroup,
+        keyboard: List<String>,
+        nCols: Int = 5
+    ) {
         val layout = FlexboxLayout(this)
+        layout.flexWrap = FlexWrap.WRAP
         viewGroup.removeAllViews()
         viewGroup += layout
         for (k in keyboard) {
-            layout += calculatorButtonFactory(k)
+            val button = calculatorButtonFactory(k)
+            button.layoutParams = LinearLayout.LayoutParams(
+                viewGroup.measuredWidth / nCols - 1,
+                viewGroup.measuredWidth / nCols - 1
+            )
+            layout += button
         }
     }
 
     private fun buttonF(view: View, isChecked: Boolean) {
         if (isChecked) {
+            findViewById<ToggleButton>(R.id.operations).isChecked = false
             createDynamicKeyboard(keyboardLayout, keyboards.functions)
         } else {
             createBaseKeyboard(keyboardLayout)
@@ -97,10 +108,8 @@ class MainActivity : AppCompatActivity(), ViewInterface {
 
     private fun buttonOp(view: View, isChecked: Boolean) {
         if (isChecked) {
-            createDynamicKeyboard(
-                keyboardLayout,
-                keyboards.operations
-            )
+            findViewById<ToggleButton>(R.id.functions).isChecked = false
+            createDynamicKeyboard(keyboardLayout, keyboards.operations)
         } else {
             createBaseKeyboard(keyboardLayout)
         }
