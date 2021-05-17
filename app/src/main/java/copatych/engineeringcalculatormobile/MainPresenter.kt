@@ -14,7 +14,12 @@ class MainPresenter(private val view: ViewInterface) {
     }
 
     fun clearOne() {
-        expr = expr.dropLast(1)
+        if (cursor == 0) moveCursorRight()
+        expr = if (cursor == expr.length) {
+            expr.dropLast(1)
+        } else {
+            expr.substring(0, cursor - 1) + expr.substring(cursor)
+        }
         view.setExpression(expr)
         moveCursorLeft()
     }
@@ -56,7 +61,7 @@ class MainPresenter(private val view: ViewInterface) {
     fun calculate() {
         try {
             view.printResult(calculatorApp.process(expr))
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             view.printErrorMessage(e.message.toString())
         }
     }

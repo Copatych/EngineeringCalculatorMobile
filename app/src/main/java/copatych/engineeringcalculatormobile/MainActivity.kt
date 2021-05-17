@@ -1,12 +1,12 @@
 package copatych.engineeringcalculatormobile
 
-import calculator.*
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.*
+import androidx.core.view.doOnLayout
+import androidx.core.view.plusAssign
 import com.google.android.flexbox.FlexboxLayout
 
 
@@ -40,11 +40,12 @@ class MainActivity : AppCompatActivity(), ViewInterface {
         get() = findViewById<ViewGroup>(R.id.keyboardLayout)
 
     private val exprContainer
-        get() = findViewById<EditText>(R.id.expression)
+        get() = findViewById<TextView>(R.id.expression)
 
     private fun calculatorButtonFactory(v: String): Button {
         val button = Button(this)
         button.text = v
+        button.transformationMethod = null
         button.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -115,17 +116,14 @@ class MainActivity : AppCompatActivity(), ViewInterface {
 
     fun buttonMoveLeft(view: View) {
         presenter.moveCursorLeft()
-        exprContainer.setSelection(presenter.getCursorPosition())
     }
 
     fun buttonMoveRight(view: View) {
         presenter.moveCursorRight()
-        exprContainer.setSelection(presenter.getCursorPosition())
     }
 
     fun buttonClearOne(view: View) {
         presenter.clearOne()
-        exprContainer.setSelection(presenter.getCursorPosition())
     }
 
     override fun getExpression(): String {
@@ -134,7 +132,6 @@ class MainActivity : AppCompatActivity(), ViewInterface {
 
     override fun setExpression(expr: String) {
         exprContainer.setText(expr)
-        exprContainer.setSelection(presenter.getCursorPosition())
     }
 
     override fun printResult(res: String) {
@@ -144,5 +141,6 @@ class MainActivity : AppCompatActivity(), ViewInterface {
     override fun printErrorMessage(err: String) {
         findViewById<TextView>(R.id.result).text = err
     }
+
 
 }

@@ -20,21 +20,24 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <EditText
+<!--        TODO view with "good" cursor-->
+        <TextView
             android:id="@+id/expression"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:cursorVisible="true"
+            android:gravity="right"
+            android:inputType="text"
+            app:autoSizeMaxTextSize="100sp"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeTextType="uniform"
             app:layout_constraintHeight_default="percent"
             app:layout_constraintHeight_percent="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:cursorVisible="true"
-            android:gravity="right"
-            android:text="123"
-            android:textSize="25sp"
-            android:inputType="text"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_default="percent"
@@ -44,24 +47,29 @@
 
             <Button
                 android:id="@+id/calculate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.2"
                 android:onClick="buttonCalculate"
-                android:text="=" />
+                android:text="="
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/result"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="4"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.8"
+                app:layout_constraintLeft_toRightOf="@+id/calculate"
                 android:gravity="right"
-                android:text="123"
+                android:text=""
                 app:autoSizeMaxTextSize="100sp"
                 app:autoSizeMinTextSize="8sp"
                 app:autoSizeStepGranularity="1sp"
                 app:autoSizeTextType="uniform" />
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -123,6 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="buttonClearOne"
             android:text="&lt;=-" />
 
     </LinearLayout>
