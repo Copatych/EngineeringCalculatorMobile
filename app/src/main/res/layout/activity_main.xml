@@ -33,7 +33,8 @@
                 app:autoSizeMaxTextSize="100sp"
                 app:autoSizeMinTextSize="8sp"
                 app:autoSizeStepGranularity="1sp"
-                app:autoSizeTextType="uniform" />
+                app:autoSizeTextType="uniform"
+                android:cursorVisible="true" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -100,6 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="buttonMoveLeft"
                 android:text="&lt;-" />
 
             <Button
@@ -107,6 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="buttonMoveRight"
                 android:text="-&gt;" />
 
             <Button

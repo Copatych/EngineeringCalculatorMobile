@@ -10,9 +10,8 @@ import androidx.core.view.*
 import com.google.android.flexbox.FlexboxLayout
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ViewInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
-        initCalculatorApp(savedInstanceState)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initButtons()
@@ -21,18 +20,12 @@ class MainActivity : AppCompatActivity() {
                 createBaseKeyboard(this)
             }
         }
+        presenter = MainPresenter(this)
+        keyboards = presenter.keyboards
     }
 
-    private var expr: String = ""
-    private lateinit var calculatorApp: CalculatorApp
-    private fun initCalculatorApp(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            calculatorApp = CalculatorApp()
-        } else {
-            // TODO serialisation for functionsAdder
-            calculatorApp = CalculatorApp()
-        }
-    }
+    private lateinit var presenter: MainPresenter
+    private lateinit var keyboards: Keyboards
 
     private fun initButtons() {
         findViewById<ToggleButton>(R.id.functions).setOnCheckedChangeListener { button, isChecked ->
@@ -46,20 +39,8 @@ class MainActivity : AppCompatActivity() {
     private val keyboardLayout
         get() = findViewById<ViewGroup>(R.id.keyboardLayout)
 
-    private fun updateExprOnTextView() {
-        val textView = findViewById<View>(R.id.expression) as TextView
-        textView.text = expr
-    }
-
-    private val baseKeyboard: List<List<String>> = listOf(
-        listOf("sin", "cos", "tan", "pi", "abs"),
-        listOf("round", "(", ")", "e"),
-        listOf("7", "8", "9", "/", "ln"),
-        listOf("4", "5", "6", "*", "^"),
-        listOf("1", "2", "3", "-", "max"),
-        listOf("!", "0", ".", "+", "min"),
-        listOf("asin", "acos", "atan", "if"),
-    )
+    private val exprContainer
+        get() = findViewById<EditText>(R.id.expression)
 
     private fun calculatorButtonFactory(v: String): Button {
         val button = Button(this)
@@ -70,8 +51,7 @@ class MainActivity : AppCompatActivity() {
             1.0f
         )
         button.setOnClickListener {
-            expr += v
-            updateExprOnTextView()
+            presenter.addSubexpression(v)
         }
         return button
     }
@@ -82,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         viewGroup.removeAllViews()
         viewGroup += verticalLayout
         val buttonHeight = viewGroup.measuredHeight / 5 - 1
-        for (row in baseKeyboard) {
+        for (row in keyboards.base) {
             val linearLayout = LinearLayout(this)
             linearLayout.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -108,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun buttonF(view: View, isChecked: Boolean) {
         if (isChecked) {
-            createDynamicKeyboard(keyboardLayout, calculatorApp.allFunctionsNames)
+            createDynamicKeyboard(keyboardLayout, keyboards.functions)
         } else {
             createBaseKeyboard(keyboardLayout)
         }
@@ -118,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         if (isChecked) {
             createDynamicKeyboard(
                 keyboardLayout,
-                calculatorApp.operationsDirector.operationsNames()
+                keyboards.operations
             )
         } else {
             createBaseKeyboard(keyboardLayout)
@@ -126,18 +106,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun buttonCalculate(view: View) {
-        val res = try {
-            calculatorApp.process(expr)
-        } catch (e : Exception) {
-            e.message.toString()
-        }
-        findViewById<TextView>(R.id.result).text = res
+        presenter.calculate()
     }
 
     fun buttonClear(view: View) {
-        expr = ""
-        findViewById<TextView>(R.id.expression).text = ""
-        findViewById<TextView>(R.id.result).text = ""
+        presenter.clearExpr()
+    }
+
+    fun buttonMoveLeft(view: View) {
+        presenter.moveCursorLeft()
+        exprContainer.setSelection(presenter.getCursorPosition())
+    }
+
+    fun buttonMoveRight(view: View) {
+        presenter.moveCursorRight()
+        exprContainer.setSelection(presenter.getCursorPosition())
+    }
+
+    fun buttonClearOne(view: View) {
+        presenter.clearOne()
+        exprContainer.setSelection(presenter.getCursorPosition())
+    }
+
+    override fun getExpression(): String {
+        return findViewById<TextView>(R.id.expression).text.toString()
+    }
+
+    override fun setExpression(expr: String) {
+        exprContainer.setText(expr)
+        exprContainer.setSelection(presenter.getCursorPosition())
+    }
+
+    override fun printResult(res: String) {
+        findViewById<TextView>(R.id.result).text = res
+    }
+
+    override fun printErrorMessage(err: String) {
+        findViewById<TextView>(R.id.result).text = err
     }
 
 }
