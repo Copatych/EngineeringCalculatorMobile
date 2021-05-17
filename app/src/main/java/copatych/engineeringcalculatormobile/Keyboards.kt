@@ -1,6 +1,7 @@
 package copatych.engineeringcalculatormobile
 
-class Keyboards(private val calculatorApp: CalculatorApp = CalculatorApp()) {
+object Keyboards {
+    private val calculatorModel: CalculatorModel? = CalculatorModel.instance
 
     // TODO Dynamically change keyboard
     val base: List<List<String>> = listOf(
@@ -13,9 +14,9 @@ class Keyboards(private val calculatorApp: CalculatorApp = CalculatorApp()) {
         listOf(" asin ", " acos ", " atan ", " if "),
     )
 
-    val functions: List<String> = calculatorApp.allFunctionsNames
-        .map { if ((it != "e") and (it != "E")) " $it " else it }
+    val functions: List<String> = calculatorModel?.allFunctionsNames
+        ?.map { if ((it != "e") and (it != "E")) " $it " else it } ?: listOf()
 
-    val operations: List<String> = calculatorApp.operationsDirector.operationsNames()
-        .map { if (it != "-") " $it " else it }
+    val operations: List<String> = calculatorModel?.operationsNames
+        ?.map { if (it != "-") " $it " else it } ?: listOf()
 }

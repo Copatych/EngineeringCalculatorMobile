@@ -6,14 +6,14 @@ import calculator.*
 fun FunctionsDirector.functionsNames(): List<String> {
     return this.getRegisteredFunctions().split('\n')
         .map { it.split(" - ").first() }
-        .filterNot {it.isEmpty()}
+        .filterNot { it.isEmpty() }
 }
 
 // TODO use operationsNames from package in newer versions of calculator package
 fun OperationsDirector.operationsNames(): List<String> {
     return this.getRegisteredOperations().split('\n')
         .map { it.split("\t- ").first() }
-        .filterNot {it.isEmpty()}
+        .filterNot { it.isEmpty() }
 }
 
 // TODO implement in calculator package and do common code for this class and StringCalculatorApp
@@ -24,9 +24,6 @@ class CalculatorApp(
     val operationsDirector: OperationsDirector = OperationsDirectorInstance().opDirector
 ) {
     private val calculatorEngine = CalculatorEngine(functionsDirector, operationsDirector)
-
-    val allFunctionsNames = functionsAdder.getFunctionsNames() +
-            functionsDirector.functionsNames()
 
     init {
         tokensPreprocessors.add(functionsAdder)

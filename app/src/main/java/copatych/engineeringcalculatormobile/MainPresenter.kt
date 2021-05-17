@@ -3,8 +3,8 @@ package copatych.engineeringcalculatormobile
 class MainPresenter(private val view: ViewInterface) {
     private var expr: String = ""
     private var cursor = 0
-    private val calculatorApp = CalculatorApp()
-    val keyboards = Keyboards(calculatorApp)
+    private val calculatorModel = CalculatorModel.instance
+    val keyboards = Keyboards
 
     fun clearExpr() {
         expr = ""
@@ -60,7 +60,7 @@ class MainPresenter(private val view: ViewInterface) {
 
     fun calculate() {
         try {
-            view.printResult(calculatorApp.process(expr))
+            calculatorModel?.let { view.printResult(it.process(expr)) }
         } catch (e: Exception) {
             view.printErrorMessage(e.message.toString())
         }

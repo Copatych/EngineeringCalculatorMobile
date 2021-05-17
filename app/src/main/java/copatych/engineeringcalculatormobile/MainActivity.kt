@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity(), ViewInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        CalculatorModel.initialize(this)
         initButtons()
         keyboardLayout.apply {
             this.doOnLayout {
