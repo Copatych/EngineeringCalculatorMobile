@@ -1,6 +1,4 @@
-package copatych.engineeringcalculatormobile
-
-import calculator.*
+package calculator
 
 // TODO use getFunctionsNames from package in newer versions of calculator package
 fun FunctionsDirector.functionsNames(): List<String> {

@@ -1,7 +1,7 @@
 package copatych.engineeringcalculatormobile
 
+import calculator.*
 import android.content.Context
-import calculator.FunctionsAdder
 import java.io.File
 
 class CalculatorModel private constructor(private val app: CalculatorApp) {

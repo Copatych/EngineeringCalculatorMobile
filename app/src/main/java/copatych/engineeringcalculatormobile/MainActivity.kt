@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnLayout
 import androidx.core.view.plusAssign
 import com.google.android.flexbox.*
 
 
-class MainActivity : AppCompatActivity(), ViewInterface {
+class MainActivity : AppCalculatorActivity(), ViewInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        CalculatorModel.initialize(this)
         initButtons()
         keyboardLayout.apply {
             this.doOnLayout {
@@ -22,11 +20,10 @@ class MainActivity : AppCompatActivity(), ViewInterface {
             }
         }
         presenter = MainPresenter(this)
-        keyboards = presenter.keyboards
     }
 
     private lateinit var presenter: MainPresenter
-    private lateinit var keyboards: Keyboards
+    private val keyboards = Keyboards
 
     private fun initButtons() {
         findViewById<ToggleButton>(R.id.functions).setOnCheckedChangeListener { button, isChecked ->
@@ -70,7 +67,6 @@ class MainActivity : AppCompatActivity(), ViewInterface {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 buttonHeight
             )
-//            linearLayout.layoutParams.height = buttonHeight
             for (v in row) {
                 val button = calculatorButtonFactory(v)
                 linearLayout += button
@@ -141,7 +137,7 @@ class MainActivity : AppCompatActivity(), ViewInterface {
     }
 
     override fun setExpression(expr: String) {
-        exprContainer.setText(expr)
+        exprContainer.text = expr
     }
 
     override fun printResult(res: String) {

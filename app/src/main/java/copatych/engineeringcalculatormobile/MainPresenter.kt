@@ -4,7 +4,6 @@ class MainPresenter(private val view: ViewInterface) {
     private var expr: String = ""
     private var cursor = 0
     private val calculatorModel = CalculatorModel.instance
-    val keyboards = Keyboards
 
     fun clearExpr() {
         expr = ""
